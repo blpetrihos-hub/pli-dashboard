@@ -167,6 +167,7 @@
           grid: { color: "rgba(0,0,0,0.06)" },
         },
         y: {
+          grace: "8%",
           title: { display: true, text: yTitle, color: "#5a5f6e" },
           ticks: { color: "#5a5f6e" },
           grid: { color: "rgba(0,0,0,0.08)" },
