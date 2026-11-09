@@ -203,7 +203,7 @@ main {
 .tensor svg {
   display: block;
   width: 100%;
-  min-width: 640px;
+  min-width: 580px;
   height: auto;
 }
 
@@ -252,14 +252,16 @@ main {
   background: #eef3ef;
   border: 1px solid #cfdad3;
   border-radius: 8px;
-  padding: 0.55rem 0.7rem;
+  padding: 0.55rem 0.6rem;
   margin-bottom: 0.45rem;
+  overflow-x: auto;
 }
 
 .math-eq .math {
   display: inline-block;
   font-family: "Cambria Math", "Times New Roman", Georgia, serif;
-  font-size: 1.12rem;
+  font-size: clamp(0.95rem, 1.45vw, 1.1rem);
+  white-space: nowrap;
   color: var(--wm-green-deep);
   letter-spacing: 0.015em;
   line-height: 1.35;
@@ -268,6 +270,11 @@ main {
 .math-eq .math em {
   font-style: italic;
   color: var(--wm-green-deep);
+  padding-right: 0.08em;
+}
+
+.math-eq .math sub {
+  margin-right: 0.08em;
 }
 
 .math-eq .math .op {
@@ -353,7 +360,7 @@ footer .bar {
 
 footer a { color: var(--gold); }
 
-@media (max-width: 900px) {
+@media (max-width: 860px) {
   .math-stack { grid-template-columns: 1fr; }
-  .math-eq .math { font-size: 1rem; }
+  .math-eq .math { font-size: 1.05rem; }
 }
