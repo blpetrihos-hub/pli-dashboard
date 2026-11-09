@@ -26,42 +26,63 @@
     const betweenFillPlugin = {
       id: "betweenFill",
       beforeDatasetsDraw(chart, _args, opts) {
-        const { ctx, chartArea } = chart;
-        if (!chartArea) return;
-        const bi = opts.baselineIndex ?? 0;
-        const pi = opts.postIndex ?? 1;
-        const lowerIsFavorable = !!opts.lowerIsFavorable;
-        const baseMeta = chart.getDatasetMeta(bi);
-        const postMeta = chart.getDatasetMeta(pi);
-        if (!baseMeta?.data?.length || !postMeta?.data?.length) return;
+        try {
+          const { ctx, chartArea } = chart;
+          if (!chartArea) return;
+          const bi = opts.baselineIndex ?? 0;
+          const pi = opts.postIndex ?? 1;
+          const lowerIsFavorable = !!opts.lowerIsFavorable;
+          const baseMeta = chart.getDatasetMeta(bi);
+          const postMeta = chart.getDatasetMeta(pi);
+          if (!baseMeta?.data?.length || !postMeta?.data?.length) return;
 
-        ctx.save();
-        ctx.beginPath();
-        ctx.rect(chartArea.left, chartArea.top, chartArea.width, chartArea.height);
-        ctx.clip();
+          const yVal = (pt) => {
+            if (!pt) return null;
+            if (pt.parsed && Number.isFinite(pt.parsed.y)) return pt.parsed.y;
+            if (Number.isFinite(pt.raw)) return Number(pt.raw);
+            return null;
+          };
 
-        for (let i = 0; i < baseMeta.data.length - 1; i++) {
-          const b0 = baseMeta.data[i];
-          const b1 = baseMeta.data[i + 1];
-          const p0 = postMeta.data[i];
-          const p1 = postMeta.data[i + 1];
-          if (![b0, b1, p0, p1].every((p) => p && Number.isFinite(p.x) && Number.isFinite(p.y))) {
-            continue;
-          }
-          const bAvg = (b0.parsed.y + b1.parsed.y) / 2;
-          const pAvg = (p0.parsed.y + p1.parsed.y) / 2;
-          const fav = lowerIsFavorable ? pAvg <= bAvg : pAvg >= bAvg;
-
+          ctx.save();
           ctx.beginPath();
-          ctx.moveTo(b0.x, b0.y);
-          ctx.lineTo(b1.x, b1.y);
-          ctx.lineTo(p1.x, p1.y);
-          ctx.lineTo(p0.x, p0.y);
-          ctx.closePath();
-          ctx.fillStyle = fav ? COLORS.favFill : COLORS.unfavFill;
-          ctx.fill();
+          ctx.rect(chartArea.left, chartArea.top, chartArea.width, chartArea.height);
+          ctx.clip();
+
+          for (let i = 0; i < baseMeta.data.length - 1; i++) {
+            const b0 = baseMeta.data[i];
+            const b1 = baseMeta.data[i + 1];
+            const p0 = postMeta.data[i];
+            const p1 = postMeta.data[i + 1];
+            if (
+              ![b0, b1, p0, p1].every(
+                (p) => p && Number.isFinite(p.x) && Number.isFinite(p.y) && !p.skip
+              )
+            ) {
+              continue;
+            }
+            const by0 = yVal(b0);
+            const by1 = yVal(b1);
+            const py0 = yVal(p0);
+            const py1 = yVal(p1);
+            if (![by0, by1, py0, py1].every(Number.isFinite)) continue;
+
+            const bAvg = (by0 + by1) / 2;
+            const pAvg = (py0 + py1) / 2;
+            const fav = lowerIsFavorable ? pAvg <= bAvg : pAvg >= bAvg;
+
+            ctx.beginPath();
+            ctx.moveTo(b0.x, b0.y);
+            ctx.lineTo(b1.x, b1.y);
+            ctx.lineTo(p1.x, p1.y);
+            ctx.lineTo(p0.x, p0.y);
+            ctx.closePath();
+            ctx.fillStyle = fav ? COLORS.favFill : COLORS.unfavFill;
+            ctx.fill();
+          }
+          ctx.restore();
+        } catch (_err) {
+          // Never abort Chart.js draw if the fill plugin fails.
         }
-        ctx.restore();
       },
     };
 
@@ -102,8 +123,9 @@
         borderColor: COLORS.baseline,
         borderDash: [7, 5],
         backgroundColor: "transparent",
-        pointRadius: 0,
-        borderWidth: 2,
+        pointRadius: 2,
+        pointHoverRadius: 4,
+        borderWidth: 2.5,
         tension: 0.22,
       },
       {
@@ -111,8 +133,9 @@
         data: post,
         borderColor: COLORS.post,
         backgroundColor: "transparent",
-        pointRadius: 0,
-        borderWidth: 2.75,
+        pointRadius: 2.5,
+        pointHoverRadius: 5,
+        borderWidth: 3,
         tension: 0.25,
       },
     ];
@@ -122,12 +145,12 @@
     return {
       responsive: true,
       maintainAspectRatio: false,
-      animation: { duration: 450 },
+      animation: false,
       interaction: { mode: "index", intersect: false },
       plugins: {
         legend: {
           position: "top",
-          labels: { usePointStyle: true, boxWidth: 10 },
+          labels: { usePointStyle: true, boxWidth: 10, color: "#1a1f1c" },
         },
         tooltip: {
           callbacks: {
@@ -140,12 +163,13 @@
       },
       scales: {
         x: {
-          ticks: { maxRotation: 0, autoSkip: true, maxTicksLimit: 9 },
-          grid: { color: "rgba(0,0,0,0.045)" },
+          ticks: { maxRotation: 0, autoSkip: true, maxTicksLimit: 9, color: "#5a5f6e" },
+          grid: { color: "rgba(0,0,0,0.06)" },
         },
         y: {
           title: { display: true, text: yTitle, color: "#5a5f6e" },
-          grid: { color: "rgba(0,0,0,0.06)" },
+          ticks: { color: "#5a5f6e" },
+          grid: { color: "rgba(0,0,0,0.08)" },
         },
       },
     };
