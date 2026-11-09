@@ -185,9 +185,8 @@ main {
 
 .tensor {
   display: grid;
-  grid-template-columns: minmax(240px, 0.95fr) 1.15fr;
-  gap: 1.15rem;
-  align-items: stretch;
+  grid-template-columns: 1fr;
+  gap: 0.9rem;
   margin-top: 0.9rem;
 }
 
@@ -197,15 +196,15 @@ main {
     #f7faf8;
   border: 1px solid var(--border);
   border-radius: 12px;
-  padding: 0.7rem 0.55rem 0.4rem;
-  display: grid;
-  place-items: center;
+  padding: 0.6rem 0.5rem 0.3rem;
+  overflow-x: auto;
 }
 
 .tensor svg {
+  display: block;
   width: 100%;
+  min-width: 640px;
   height: auto;
-  max-width: 430px;
 }
 
 .tensor-copy {
@@ -215,7 +214,21 @@ main {
 
 .math-stack {
   display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
   gap: 0.7rem;
+}
+
+.math-label .step {
+  display: inline-grid;
+  place-items: center;
+  width: 1.25rem;
+  height: 1.25rem;
+  margin-right: 0.35rem;
+  border-radius: 50%;
+  background: var(--wm-green);
+  color: #fff;
+  font-size: 0.7rem;
+  letter-spacing: 0;
 }
 
 .math-card {
@@ -340,7 +353,7 @@ footer .bar {
 
 footer a { color: var(--gold); }
 
-@media (max-width: 800px) {
-  .tensor { grid-template-columns: 1fr; }
+@media (max-width: 900px) {
+  .math-stack { grid-template-columns: 1fr; }
   .math-eq .math { font-size: 1rem; }
 }
