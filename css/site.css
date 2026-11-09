@@ -246,9 +246,26 @@ main {
 .math-eq .math {
   display: inline-block;
   font-family: "Cambria Math", "Times New Roman", Georgia, serif;
-  font-size: 1.08rem;
+  font-size: 1.12rem;
   color: var(--wm-green-deep);
-  letter-spacing: 0.01em;
+  letter-spacing: 0.015em;
+  line-height: 1.35;
+}
+
+.math-eq .math em {
+  font-style: italic;
+  color: var(--wm-green-deep);
+}
+
+.math-eq .math .op {
+  display: inline-block;
+  margin: 0 0.35rem;
+  font-style: normal;
+  color: var(--navy);
+}
+
+.math-eq .math sub {
+  font-size: 0.72em;
 }
 
 .math-card p {
