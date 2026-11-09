@@ -185,16 +185,27 @@ main {
 
 .tensor {
   display: grid;
-  grid-template-columns: 1.1fr 1fr;
-  gap: 1rem;
-  align-items: center;
-  margin-top: 0.75rem;
+  grid-template-columns: minmax(240px, 0.95fr) 1.15fr;
+  gap: 1.15rem;
+  align-items: stretch;
+  margin-top: 0.9rem;
+}
+
+.tensor-visual {
+  background:
+    linear-gradient(160deg, rgba(17, 87, 64, 0.06), transparent 55%),
+    #f7faf8;
+  border: 1px solid var(--border);
+  border-radius: 12px;
+  padding: 0.7rem 0.55rem 0.4rem;
+  display: grid;
+  place-items: center;
 }
 
 .tensor svg {
   width: 100%;
   height: auto;
-  max-width: 360px;
+  max-width: 430px;
 }
 
 .tensor-copy {
@@ -202,12 +213,54 @@ main {
   font-size: 0.95rem;
 }
 
-.tensor-copy code {
-  background: #eef3ef;
-  padding: 0.1rem 0.35rem;
-  border-radius: 4px;
+.math-stack {
+  display: grid;
+  gap: 0.7rem;
+}
+
+.math-card {
+  background: #f7faf8;
+  border: 1px solid var(--border);
+  border-left: 4px solid var(--wm-green);
+  border-radius: 10px;
+  padding: 0.7rem 0.85rem 0.75rem;
+}
+
+.math-label {
+  font-size: 0.72rem;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  font-weight: 700;
   color: var(--wm-green-deep);
+  margin-bottom: 0.35rem;
+}
+
+.math-eq {
+  background: #eef3ef;
+  border: 1px solid #cfdad3;
+  border-radius: 8px;
+  padding: 0.55rem 0.7rem;
+  margin-bottom: 0.45rem;
+}
+
+.math-eq .math {
+  display: inline-block;
+  font-family: "Cambria Math", "Times New Roman", Georgia, serif;
+  font-size: 1.08rem;
+  color: var(--wm-green-deep);
+  letter-spacing: 0.01em;
+}
+
+.math-card p {
+  margin: 0;
   font-size: 0.88rem;
+  line-height: 1.45;
+  color: var(--muted);
+}
+
+.math-card em {
+  font-style: italic;
+  color: var(--navy);
 }
 
 .toggles {
@@ -272,4 +325,5 @@ footer a { color: var(--gold); }
 
 @media (max-width: 800px) {
   .tensor { grid-template-columns: 1fr; }
+  .math-eq .math { font-size: 1rem; }
 }
