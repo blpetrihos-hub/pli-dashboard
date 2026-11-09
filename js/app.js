@@ -27,21 +27,17 @@
       id: "betweenFill",
       beforeDatasetsDraw(chart, _args, opts) {
         try {
-          const { ctx, chartArea } = chart;
+          const { ctx, chartArea, data } = chart;
           if (!chartArea) return;
           const bi = opts.baselineIndex ?? 0;
           const pi = opts.postIndex ?? 1;
           const lowerIsFavorable = !!opts.lowerIsFavorable;
           const baseMeta = chart.getDatasetMeta(bi);
           const postMeta = chart.getDatasetMeta(pi);
+          const baseVals = data?.datasets?.[bi]?.data;
+          const postVals = data?.datasets?.[pi]?.data;
           if (!baseMeta?.data?.length || !postMeta?.data?.length) return;
-
-          const yVal = (pt) => {
-            if (!pt) return null;
-            if (pt.parsed && Number.isFinite(pt.parsed.y)) return pt.parsed.y;
-            if (Number.isFinite(pt.raw)) return Number(pt.raw);
-            return null;
-          };
+          if (!Array.isArray(baseVals) || !Array.isArray(postVals)) return;
 
           ctx.save();
           ctx.beginPath();
@@ -60,10 +56,10 @@
             ) {
               continue;
             }
-            const by0 = yVal(b0);
-            const by1 = yVal(b1);
-            const py0 = yVal(p0);
-            const py1 = yVal(p1);
+            const by0 = Number(baseVals[i]);
+            const by1 = Number(baseVals[i + 1]);
+            const py0 = Number(postVals[i]);
+            const py1 = Number(postVals[i + 1]);
             if (![by0, by1, py0, py1].every(Number.isFinite)) continue;
 
             const bAvg = (by0 + by1) / 2;
@@ -89,25 +85,29 @@
     const t0Plugin = {
       id: "t0Marker",
       afterDatasetsDraw(chart, _args, opts) {
-        const idx = opts.index;
-        if (idx == null || idx < 0) return;
-        const meta = chart.getDatasetMeta(0);
-        const pt = meta?.data?.[idx];
-        if (!pt || !Number.isFinite(pt.x)) return;
-        const { top, bottom } = chart.chartArea;
-        const ctx = chart.ctx;
-        ctx.save();
-        ctx.strokeStyle = COLORS.t0;
-        ctx.lineWidth = 1.25;
-        ctx.setLineDash([4, 4]);
-        ctx.beginPath();
-        ctx.moveTo(pt.x, top);
-        ctx.lineTo(pt.x, bottom);
-        ctx.stroke();
-        ctx.fillStyle = COLORS.t0;
-        ctx.font = "600 12px Segoe UI, Arial, sans-serif";
-        ctx.fillText("t₀", pt.x + 5, top + 14);
-        ctx.restore();
+        try {
+          const idx = opts.index;
+          if (idx == null || idx < 0) return;
+          const meta = chart.getDatasetMeta(0);
+          const pt = meta?.data?.[idx];
+          if (!pt || !Number.isFinite(pt.x) || !chart.chartArea) return;
+          const { top, bottom } = chart.chartArea;
+          const ctx = chart.ctx;
+          ctx.save();
+          ctx.strokeStyle = COLORS.t0;
+          ctx.lineWidth = 1.25;
+          ctx.setLineDash([4, 4]);
+          ctx.beginPath();
+          ctx.moveTo(pt.x, top);
+          ctx.lineTo(pt.x, bottom);
+          ctx.stroke();
+          ctx.fillStyle = COLORS.t0;
+          ctx.font = "600 12px Segoe UI, Arial, sans-serif";
+          ctx.fillText("t₀", pt.x + 5, top + 14);
+          ctx.restore();
+        } catch (_err) {
+          // ignore marker failures
+        }
       },
     };
 
