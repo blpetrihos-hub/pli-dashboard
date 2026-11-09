@@ -6,8 +6,6 @@
   <title>Petrihos Lever Index (PLI) — Dashboard</title>
   <meta name="description" content="Interactive explainer for the Petrihos Lever Index: quarterly paths, tensor stacking, and attributable trend lines." />
   <link rel="stylesheet" href="css/site.css" />
-  <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.6/dist/chart.umd.min.js" defer></script>
-  <script src="js/app.js" defer></script>
 </head>
 <body>
   <header class="topbar">
@@ -26,6 +24,7 @@
         against an IMF-anchored baseline—rule-based, fully traceable, and signed by an SME.
       </p>
       <div class="callout">Directional, not predictive — the chart is the adjudication; the SME signs it.</div>
+      <p id="chartStatus" class="status" hidden></p>
     </section>
 
     <div class="grid">
@@ -33,7 +32,7 @@
         <h2>From matrix cell to quarterly path</h2>
         <p class="indicators-note">
           PLI turns a coded action into an impulse path on each indicator. The post-action
-          series is the baseline plus that impulse.
+          series is the baseline plus that impulse. Green fill = favorable divergence; red = unfavorable.
         </p>
 
         <div class="equations" aria-label="PLI path equations">
@@ -50,7 +49,7 @@
 
         <h3>One indicator — quarterly path</h3>
         <div class="chart-wrap">
-          <canvas id="pathChart" aria-label="Quarterly path cartoon chart"></canvas>
+          <canvas id="pathChart" width="900" height="380" aria-label="Quarterly path cartoon chart"></canvas>
         </div>
 
         <h3>Tensor flow</h3>
@@ -62,15 +61,12 @@
                 <stop offset="100%" stop-color="#b7cfc3"/>
               </linearGradient>
             </defs>
-            <!-- isometric-ish cube -->
             <polygon points="80,70 230,40 380,70 230,100" fill="#e8f0eb" stroke="#115740" stroke-width="2"/>
             <polygon points="80,70 80,180 230,220 230,100" fill="url(#face)" stroke="#115740" stroke-width="2"/>
             <polygon points="230,100 230,220 380,180 380,70" fill="#cfe0d6" stroke="#115740" stroke-width="2"/>
-            <!-- highlighted cell -->
             <polygon points="150,95 190,87 230,100 190,110" fill="#7eb6a0" stroke="#0a3d2c" stroke-width="1.5"/>
             <polygon points="150,95 150,125 190,140 190,110" fill="#5f9a82" stroke="#0a3d2c" stroke-width="1.5"/>
             <polygon points="190,110 190,140 230,130 230,100" fill="#4f8a72" stroke="#0a3d2c" stroke-width="1.5"/>
-            <!-- axis labels -->
             <text x="30" y="140" fill="#1f3b6e" font-size="13" font-family="Segoe UI, Arial">Action a</text>
             <text x="250" y="240" fill="#1f3b6e" font-size="13" font-family="Segoe UI, Arial">Quarter q</text>
             <text x="300" y="30" fill="#1f3b6e" font-size="13" font-family="Segoe UI, Arial">Indicator i</text>
@@ -95,13 +91,14 @@
         <p class="indicators-note">
           Five indicators: real GDP growth, PCE inflation, unemployment, trade volume, and fixed investment.
           Baselines are anchored to IMF Article IV projections and corroborated with public outlooks (CBO, Fed, WTO, OECD).
+          Use the buttons to switch channels for the same worked example.
         </p>
 
         <div class="toggles" id="indicatorToggles" aria-label="Select indicator"></div>
         <p class="example-label" id="exampleLabel">Loading worked example…</p>
 
         <div class="chart-wrap">
-          <canvas id="trendChart" aria-label="Attributable quarterly trend lines chart"></canvas>
+          <canvas id="trendChart" width="900" height="380" aria-label="Attributable quarterly trend lines chart"></canvas>
         </div>
       </section>
     </div>
@@ -113,5 +110,10 @@
       <span><a href="https://blpetrihos-hub.github.io/">blpetrihos-hub.github.io</a></span>
     </div>
   </footer>
+
+  <!-- Load order: Chart.js -> embedded data -> app -->
+  <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.6/dist/chart.umd.min.js"></script>
+  <script src="js/demo-data.js"></script>
+  <script src="js/app.js"></script>
 </body>
 </html>
