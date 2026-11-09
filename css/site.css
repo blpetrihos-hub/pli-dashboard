@@ -39,11 +39,12 @@ a { color: var(--wm-green); }
 }
 
 .topbar-inner {
-  max-width: 1100px;
-  margin: 0 auto;
+  max-width: none;
+  margin: 0;
   padding: 0.85rem 1.25rem;
   display: flex;
   align-items: center;
+  justify-content: flex-start;
   gap: 0.85rem;
 }
 
@@ -74,28 +75,27 @@ main {
   padding: 1.75rem 1.25rem 3rem;
 }
 
+.hero {
+  text-align: center;
+}
+
 .hero h1 {
-  margin: 0 0 0.4rem;
+  margin: 0 0 0.55rem;
   font-size: clamp(1.7rem, 3vw, 2.35rem);
   color: var(--wm-green-deep);
   letter-spacing: -0.02em;
 }
 
 .hero .lede {
-  max-width: 46rem;
+  max-width: 42rem;
   color: var(--muted);
   font-size: 1.05rem;
-  margin: 0 0 1rem;
+  margin: 0 auto;
+  line-height: 1.55;
 }
 
 .callout {
-  display: inline-block;
-  background: var(--wm-green);
-  color: #fff;
-  padding: 0.55rem 0.9rem;
-  border-radius: 999px;
-  font-size: 0.92rem;
-  font-weight: 600;
+  display: none;
 }
 
 .grid {
